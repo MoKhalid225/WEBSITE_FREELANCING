@@ -61,6 +61,7 @@ function showSlide(index) {
     dots[currentSlide].classList.add('active');
 }
 
+// RTL: Swap prev/next for RTL layout
 if (nextBtn) {
     nextBtn.addEventListener('click', () => {
         showSlide(currentSlide + 1);
@@ -102,12 +103,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Form submissions
+// Form submissions with Arabic messages
 const newsletterForm = document.querySelector('.newsletter-form');
 if (newsletterForm) {
     newsletterForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        alert('Thank you for subscribing to our newsletter!');
+        alert('شكراً لاشتراككم في نشرتنا الإخبارية!');
         newsletterForm.reset();
     });
 }
@@ -116,7 +117,7 @@ const footerContactForm = document.querySelector('.footer-contact-form');
 if (footerContactForm) {
     footerContactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        alert('Thank you for your message! We will get back to you soon.');
+        alert('شكراً لرسالتكم! سنتواصل معكم قريباً.');
         footerContactForm.reset();
     });
 }
@@ -126,7 +127,7 @@ const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        alert('Thank you for contacting us! We will get back to you soon.');
+        alert('شكراً للتواصل معنا! سنرد عليكم في أقرب وقت ممكن.');
         contactForm.reset();
     });
 }
@@ -136,8 +137,7 @@ const applicationForm = document.querySelector('.application-form');
 if (applicationForm) {
     applicationForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        alert('Thank you for your application! We will review it and get back to you soon.');
+        alert('شكراً لتقديم طلبكم! سنراجعه ونتواصل معكم قريباً.');
         applicationForm.reset();
     });
 }
-
