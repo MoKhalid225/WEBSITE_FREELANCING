@@ -267,3 +267,184 @@ document.addEventListener('keydown', (e) => {
         closeVideoModal();
     }
 });
+
+// News Fetching Function (Can be enhanced with backend API)
+// Note: Direct scraping from browser is blocked by CORS
+// This function can be used with a backend proxy/API
+async function fetchNewsFromUrl(url) {
+    try {
+        // This would require a backend API endpoint
+        // Example: const response = await fetch(`/api/fetch-news?url=${encodeURIComponent(url)}`);
+        // For now, return null to indicate manual updates needed
+        return null;
+    } catch (error) {
+        console.error('Error fetching news:', error);
+        return null;
+    }
+}
+
+// News data structure (can be updated manually or via API)
+const newsData = [
+    {
+        title: "نقيب العاملين بالنظافة: طورنا أكبر مقلب قمامة بمنوف بدعم من محافظ المنوفية",
+        date: "13 نوفمبر 2024",
+        excerpt: "أكد المهندس أمين حسن، النقيب العام للعاملين بالنظافة وتحسين البيئة، أنه تم تنفيذ تجربة جديدة بمحافظة المنوفية بدعم من إحدى الشركات الاستثمارية التي لديها خبرة في مجال إدارة المخلفات الصلبة. وأشار إلى أنه تم استلام مصنع منوف منذ ستة أشهر من محافظة المنوفية، وكان المصنع مُعطل منذ عام 2019 ولا يوجد به أيه معدات ولا خطوط إنتاج.",
+        image: "https://darelhilal.com/Images/News/2700522.jpg",
+        link: "https://darelhilal.com/News/2700522.aspx"
+    },
+    {
+        title: "نقيب العاملين بالنظافة: رصد 25 مليون جنيه لإعادة تدوير 500 طن يومياً",
+        date: "19 نوفمبر 2024",
+        excerpt: "أعلن المهندس أمين حسن، النقيب العام للعاملين بالنظافة وتحسين البيئة، عن رصد 25 مليون جنيه لإعادة تدوير 500 طن من المخلفات يومياً. وأكد أن هذا المشروع يعد من أكبر المشروعات البيئية في مصر.",
+        image: "https://via.placeholder.com/400x250?text=صورة+الخبر",
+        link: "https://www.youm7.com/story/2024/11/19/%D9%86%D9%82%D9%8A%D8%A8-%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D9%84%D9%8A%D9%86-%D8%A8%D8%A7%D9%84%D9%86%D8%B8%D8%A7%D9%81%D8%A9-%D8%B1%D8%B5%D8%AF-25-%D9%85%D9%84%D9%8A%D9%88%D9%86-%D8%AC%D9%86%D9%8A%D9%87-%D9%84%D8%A5%D8%B9%D8%A7%D8%AF%D8%A9-%D8%AA%D8%AF%D9%88%D9%8A%D8%B1-500/6782326"
+    },
+    {
+        title: "أخبار البيئة والمخلفات",
+        date: "نوفمبر 2024",
+        excerpt: "تابع آخر الأخبار والتطورات في مجال إدارة المخلفات الصلبة والبيئة في مصر والمنطقة العربية.",
+        image: "https://via.placeholder.com/400x250?text=صورة+الخبر",
+        link: "https://www.albawabhnews.com/5107148"
+    }
+];
+
+// Function to update news cards (can be called when news data is fetched)
+function updateNewsCards(newsArray) {
+    const postsGrid = document.querySelector('.posts-grid');
+    if (!postsGrid) return;
+    
+    postsGrid.innerHTML = newsArray.map(news => `
+        <article class="post-card">
+            <div class="post-image">
+                <img src="${news.image}" alt="${news.title}" onerror="this.src='https://via.placeholder.com/400x250?text=صورة+الخبر'">
+            </div>
+            <div class="post-content">
+                <div class="post-date">${news.date}</div>
+                <h3>${news.title}</h3>
+                <p>${news.excerpt}</p>
+                <a href="${news.link}" target="_blank" class="read-more">اقرأ المزيد</a>
+            </div>
+        </article>
+    `).join('');
+}
+
+// Photo Gallery - Automatically load images from images/gallery folder
+// Supports both .jpg and .jpeg files
+// Just drop images named: gallery1.jpg, gallery2.jpeg, gallery3.jpg, etc.
+function loadGalleryImages() {
+    const galleryGrid = document.getElementById('galleryGrid');
+    if (!galleryGrid) return;
+    
+    let imageIndex = 1;
+    let loadedCount = 0;
+    const maxAttempts = 100; // Maximum number of images to try
+    
+    function tryLoadImage(index, extension) {
+        if (index > maxAttempts) return;
+        
+        // Try .jpg first, then .jpeg if extension not specified
+        const ext = extension || 'jpg';
+        const imagePath = `images/gallery/gallery${index}.${ext}`;
+        const img = new Image();
+        
+        img.onload = function() {
+            // Image exists, add it to gallery
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'gallery-item';
+            const imgElement = document.createElement('img');
+            imgElement.src = imagePath;
+            imgElement.alt = `صورة المعرض ${index}`;
+            imgElement.loading = 'lazy';
+            imgElement.style.cursor = 'pointer';
+            
+            // Add click handler to open lightbox
+            imgElement.addEventListener('click', () => {
+                openImageLightbox(imagePath);
+            });
+            
+            galleryItem.appendChild(imgElement);
+            galleryGrid.appendChild(galleryItem);
+            loadedCount++;
+            
+            // Try next image
+            tryLoadImage(index + 1);
+        };
+        
+        img.onerror = function() {
+            // If .jpg failed, try .jpeg
+            if (ext === 'jpg') {
+                tryLoadImage(index, 'jpeg');
+            } else {
+                // Both extensions failed, move to next image number
+                // If we loaded at least one image, we're done
+                // Otherwise, try next (in case first image is missing but others exist)
+                if (loadedCount === 0 && index < 10) {
+                    tryLoadImage(index + 1);
+                }
+            }
+        };
+        
+        img.src = imagePath;
+    }
+    
+    // Start loading from gallery1.jpg
+    tryLoadImage(1);
+}
+
+// Image Lightbox Functions
+function openImageLightbox(imageSrc) {
+    const lightbox = document.getElementById('imageLightbox');
+    const lightboxImg = document.getElementById('lightboxImage');
+    
+    if (lightbox && lightboxImg) {
+        lightboxImg.src = imageSrc;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeImageLightbox() {
+    const lightbox = document.getElementById('imageLightbox');
+    if (lightbox) {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// Initialize gallery when page loads
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        loadGalleryImages();
+        initImageLightbox();
+    });
+} else {
+    loadGalleryImages();
+    initImageLightbox();
+}
+
+// Initialize image lightbox event listeners
+function initImageLightbox() {
+    const lightbox = document.getElementById('imageLightbox');
+    const closeBtn = document.querySelector('.lightbox-close');
+    
+    // Close button click
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeImageLightbox);
+    }
+    
+    // Click outside image to close
+    if (lightbox) {
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) {
+                closeImageLightbox();
+            }
+        });
+    }
+    
+    // Escape key to close
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && lightbox && lightbox.classList.contains('active')) {
+            closeImageLightbox();
+        }
+    });
+}

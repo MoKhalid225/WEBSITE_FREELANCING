@@ -611,22 +611,49 @@ body {
 }
 
 .post-card {
-    background: var(--bg-light);
-    padding: 30px;
+    background: var(--white);
     border-radius: 10px;
+    overflow: hidden;
     transition: var(--transition);
-    border-right: 4px solid var(--primary-color);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
 }
 
 .post-card:hover {
-    box-shadow: var(--shadow);
-    transform: translateX(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+}
+
+.post-image {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: var(--bg-light);
+}
+
+.post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.post-card:hover .post-image img {
+    transform: scale(1.1);
+}
+
+.post-content {
+    padding: 25px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .post-date {
     color: var(--primary-color);
     font-weight: 600;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     font-size: 14px;
 }
 
@@ -636,12 +663,17 @@ body {
     margin-bottom: 15px;
     line-height: 1.6;
     font-weight: 700;
+    flex: 1;
 }
 
 .post-card p {
     color: var(--light-text);
     margin-bottom: 15px;
     line-height: 1.8;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .read-more {
@@ -649,10 +681,13 @@ body {
     text-decoration: none;
     font-weight: 600;
     transition: var(--transition);
+    margin-top: auto;
+    display: inline-block;
 }
 
 .read-more:hover {
     color: var(--accent-color);
+    padding-right: 5px;
 }
 
 /* Newsletter Section */
@@ -1508,6 +1543,52 @@ body {
     to {
         opacity: 1;
     }
+}
+
+/* Image Lightbox */
+.image-lightbox {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.image-lightbox.active {
+    display: flex;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: var(--white);
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 10001;
+    line-height: 1;
+}
+
+.lightbox-close:hover {
+    color: var(--secondary-color);
+    transform: scale(1.1);
+}
+
+#lightboxImage {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    animation: scaleIn 0.3s ease;
 }
 
 @keyframes scaleIn {
