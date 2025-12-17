@@ -409,6 +409,228 @@ body {
     background: var(--bg-light);
 }
 
+.board-section {
+    background: var(--bg-light);
+}
+
+/* Board of Directors (Hierarchical / Org Chart) */
+.org-chart {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.org-root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.org-node {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-align: center;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.org-node-sm {
+    font-weight: 700;
+    color: var(--primary-color);
+    font-size: 18px;
+}
+
+.org-node-lg {
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--text-color);
+}
+
+.org-root-connector {
+    height: 34px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 10px 0 0;
+}
+
+.org-mini-connector {
+    height: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.org-mini-connector .org-line {
+    width: 2px;
+    height: 14px;
+    background: rgba(44, 95, 45, 0.55);
+}
+
+.org-mini-connector .org-arrow {
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 9px solid rgba(44, 95, 45, 0.75);
+    margin-top: 2px;
+}
+
+.org-root-connector .org-line {
+    width: 2px;
+    height: 18px;
+    background: rgba(44, 95, 45, 0.55);
+}
+
+.org-root-connector .org-arrow {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 10px solid rgba(44, 95, 45, 0.75);
+    margin-top: 2px;
+}
+
+.org-children {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+    padding-top: 40px;
+    direction: rtl; /* ensures first item sits on the right side */
+}
+
+.org-children::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 8%;
+    right: 8%;
+    height: 2px;
+    background: rgba(44, 95, 45, 0.35);
+    border-radius: 2px;
+}
+
+.org-child {
+    position: relative;
+}
+
+.org-child::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 18px;
+    background: rgba(44, 95, 45, 0.35);
+}
+
+.org-child::after {
+    content: '';
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 9px solid rgba(44, 95, 45, 0.45);
+}
+
+.org-box {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 18px 18px 16px;
+    margin-top: 58px;
+    text-align: center;
+}
+
+.org-box-title {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary-color);
+    line-height: 1.6;
+}
+
+.org-box-name {
+    margin: 0 0 12px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.org-box-list {
+    margin: 0;
+    padding: 0;
+    list-style-position: inside;
+    color: var(--light-text);
+    text-align: right;
+    line-height: 1.9;
+}
+
+.org-box-list li {
+    margin: 2px 0;
+}
+
+.org-box-list-bullets {
+    list-style: disc;
+    list-style-position: outside;
+    padding-inline-start: 22px; /* RTL: becomes right padding */
+    max-width: 260px;
+    margin: 0 auto;
+}
+
+/* Responsive: keep it simple on small screens (no connector lines) */
+@media (max-width: 992px) {
+    .org-children {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding-top: 0;
+    }
+
+    .org-children::before,
+    .org-child::before,
+    .org-child::after {
+        display: none;
+    }
+
+    /* Keep a simple arrow between the chairman name and the first level boxes */
+    .org-root-connector {
+        display: flex;
+        margin: 12px 0 18px;
+    }
+
+    /* Also keep the arrow between "رئيس مجلس الإدارة" and the chairman name */
+    .org-mini-connector {
+        display: flex;
+        margin: 6px 0 2px;
+    }
+
+    .org-box {
+        margin-top: 0;
+        text-align: right;
+    }
+}
+
+@media (max-width: 576px) {
+    .org-children {
+        grid-template-columns: 1fr;
+    }
+
+    .org-node-lg {
+        font-size: 20px;
+    }
+}
+
 .section-subtitle {
     text-align: center;
     font-size: 18px;

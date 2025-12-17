@@ -75,7 +75,6 @@
                                 <li><a href="media-center.html#photo-gallery">معرض الصور</a></li>
                                 <li><a href="media-center.html#video-gallery">معرض الفيديو</a></li>
                                 <li><a href="media-center.html#download-center">مركز التحميل</a></li>
-                                <li><a href="media-center.html#delegate-visits">زيارات الوفود</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -150,62 +149,75 @@
         </div>
     </section>
 
-    <!-- Board of Directors Section -->
-    <section class="team-section">
+    <!-- Board of Directors (Hierarchical) -->
+    <section class="team-section board-section">
         <div class="container">
             <h2 class="section-title">مجلس الإدارة</h2>
-            <p class="section-subtitle">فريق القيادة الذي يقود رؤيتنا نحو التميز</p>
-            <div class="team-grid">
-                <div class="team-card">
-                    <div class="team-img-wrapper">
-                        <img src="https://placehold.co/280x280/e8f5e9/2c5f2d?text=عضو+1" alt="عضو مجلس الإدارة" class="team-img">
+
+            <div class="org-chart">
+                <div class="org-root">
+                    <div class="org-node org-node-sm">رئيس مجلس الإدارة</div>
+                    <div class="org-mini-connector" aria-hidden="true">
+                        <span class="org-line"></span>
+                        <span class="org-arrow"></span>
                     </div>
-                    <h3 class="team-name">م. هشام شريف</h3>
-                    <p class="team-position">رئيس مجلس الإدارة</p>
-                    <div class="team-social">
-                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" target="_blank"><i class="fas fa-envelope"></i></a>
-                    </div>
+                    <div class="org-node org-node-lg">م/ أمين حسن محمود</div>
                 </div>
-                <div class="team-card">
-                    <div class="team-img-wrapper">
-                        <img src="https://placehold.co/280x280/e8f5e9/2c5f2d?text=عضو+2" alt="عضو مجلس الإدارة" class="team-img">
-                    </div>
-                    <h3 class="team-name">م. أحمد محمد</h3>
-                    <p class="team-position">نائب رئيس مجلس الإدارة</p>
-                    <div class="team-social">
-                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" target="_blank"><i class="fas fa-envelope"></i></a>
-                    </div>
+
+                <div class="org-root-connector" aria-hidden="true">
+                    <span class="org-line"></span>
+                    <span class="org-arrow"></span>
                 </div>
-                <div class="team-card">
-                    <div class="team-img-wrapper">
-                        <img src="https://placehold.co/280x280/e8f5e9/2c5f2d?text=عضو+3" alt="عضو مجلس الإدارة" class="team-img">
+
+                <div class="org-children">
+                    <!-- Right -->
+                    <div class="org-child">
+                        <div class="org-box">
+                            <h3 class="org-box-title">نائب رئيس مجلس الإدارة<br>للشؤون الفنية</h3>
+                            <p class="org-box-name">م/ عمرو على دياب</p>
+                            <ol class="org-box-list">
+                                <li>إدارة المصانع</li>
+                                <li>إدارة النقل</li>
+                                <li>إدارة التشغيل</li>
+                                <li>التعاقدات</li>
+                            </ol>
+                        </div>
                     </div>
-                    <h3 class="team-name">م. خالد عبدالله</h3>
-                    <p class="team-position">المدير التنفيذي</p>
-                    <div class="team-social">
-                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" target="_blank"><i class="fas fa-envelope"></i></a>
+
+                    <!-- Center -->
+                    <div class="org-child">
+                        <div class="org-box">
+                            <h3 class="org-box-title">نائب رئيس مجلس الإدارة<br>للشؤون الاقتصادية</h3>
+                            <p class="org-box-name">م/ بيتر بشرى</p>
+                            <ol class="org-box-list">
+                                <li>إدارة التسويق</li>
+                                <li>إدارة الموارد البشرية</li>
+                                <li>الإدارة المالية</li>
+                            </ol>
+                        </div>
                     </div>
-                </div>
-                <div class="team-card">
-                    <div class="team-img-wrapper">
-                        <img src="https://placehold.co/280x280/e8f5e9/2c5f2d?text=عضو+4" alt="عضو مجلس الإدارة" class="team-img">
+
+                    <!-- Left -->
+                    <div class="org-child">
+                        <div class="org-box">
+                            <h3 class="org-box-title">الهيئة الاستشارية</h3>
+                            <ul class="org-box-list org-box-list-bullets">
+                                <li>استشاري فني</li>
+                                <li>استشاري بيئي</li>
+                                <li>استشاري اقتصادي</li>
+                                <li>استشاري قانوني</li>
+                                <li>استشاري جودة</li>
+                                <li>استشاري التصميمات</li>
+                            </ul>
+                        </div>
                     </div>
-                    <h3 class="team-name">م. محمود حسن</h3>
-                    <p class="team-position">عضو مجلس الإدارة</p>
-                    <div class="team-social">
-                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" target="_blank"><i class="fas fa-envelope"></i></a>
+
+                    <!-- Extra branch (far left) -->
+                    <div class="org-child">
+                        <div class="org-box">
+                            <h3 class="org-box-title">قطاع البحوث و التطوير</h3>
+                            <p class="org-box-name">دكتور/ أحمد سلطان</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -328,7 +340,6 @@
                         <li><a href="projects.html">مشاريعنا</a></li>
                         <li><a href="media-center.html">الأخبار والفعاليات</a></li>
                         <li><a href="media-center.html#download-center">مركز التحميل</a></li>
-                        <li><a href="media-center.html#delegate-visits">زيارات الوفود</a></li>
                         <li><a href="careers.html">الوظائف</a></li>
                         <li><a href="contact-us.html">اتصل بنا</a></li>
                     </ul>
