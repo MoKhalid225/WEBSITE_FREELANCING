@@ -106,6 +106,20 @@ body {
     color: var(--primary-color);
     text-decoration: none;
     letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-img {
+    height: 38px;
+    width: auto;
+    display: block;
+    object-fit: contain;
+}
+
+.logo-text {
+    line-height: 1;
 }
 
 .nav-menu {
@@ -1093,6 +1107,10 @@ body {
 
     .hamburger.active span:nth-child(3) {
         transform: rotate(-45deg) translate(7px, -6px);
+    }
+
+    .logo-img {
+        height: 32px;
     }
 
     .slide-content h1 {
