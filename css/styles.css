@@ -745,6 +745,10 @@ body {
     padding: 0;
 }
 
+.section-divider.section-divider-transparent {
+    background: transparent;
+}
+
 .divider-line {
     height: 1px;
     background: linear-gradient(to left, transparent, var(--secondary-color), var(--primary-color), var(--secondary-color), transparent);
