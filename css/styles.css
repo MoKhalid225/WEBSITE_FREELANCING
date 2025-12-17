@@ -1468,6 +1468,16 @@ body {
     object-fit: cover; /* fill frame without stretching */
 }
 
+/* For albums where we want the full image visible (no cropping) */
+.album.album-contain .album-slide img {
+    object-fit: contain;
+    background: var(--white);
+}
+
+.album.album-contain::before {
+    display: none;
+}
+
 .album-btn {
     position: absolute;
     top: 50%;
