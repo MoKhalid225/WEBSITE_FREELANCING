@@ -416,10 +416,12 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
         loadGalleryImages();
         initImageLightbox();
+        initAlbums();
     });
 } else {
     loadGalleryImages();
     initImageLightbox();
+    initAlbums();
 }
 
 // Initialize image lightbox event listeners
@@ -446,5 +448,74 @@ function initImageLightbox() {
         if (e.key === 'Escape' && lightbox && lightbox.classList.contains('active')) {
             closeImageLightbox();
         }
+    });
+}
+
+// Album (simple carousel) - used in Projects page (and reusable elsewhere)
+function initAlbums() {
+    const albums = document.querySelectorAll('.album');
+    if (!albums.length) return;
+
+    albums.forEach((album) => {
+        const track = album.querySelector('.album-track');
+        const slides = album.querySelectorAll('.album-slide');
+        const prevBtn = album.querySelector('.album-prev');
+        const nextBtn = album.querySelector('.album-next');
+        const dotsContainer = album.querySelector('.album-dots');
+
+        if (!track || slides.length === 0) return;
+
+        let index = 0;
+
+        function update() {
+            track.style.transform = `translateX(-${index * 100}%)`;
+            if (dotsContainer) {
+                const dots = dotsContainer.querySelectorAll('.album-dot');
+                dots.forEach((d, i) => d.classList.toggle('active', i === index));
+            }
+        }
+
+        function setIndex(i) {
+            const max = slides.length - 1;
+            index = Math.max(0, Math.min(i, max));
+            update();
+        }
+
+        function next() {
+            setIndex(index + 1);
+        }
+
+        function prev() {
+            setIndex(index - 1);
+        }
+
+        // Build dots
+        if (dotsContainer) {
+            dotsContainer.innerHTML = '';
+            slides.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.className = 'album-dot' + (i === 0 ? ' active' : '');
+                dot.setAttribute('aria-label', `انتقل إلى الصورة ${i + 1}`);
+                dot.addEventListener('click', () => setIndex(i));
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        if (nextBtn) nextBtn.addEventListener('click', next);
+        if (prevBtn) prevBtn.addEventListener('click', prev);
+
+        // Click image to zoom (uses existing lightbox if present on the page)
+        slides.forEach((slide) => {
+            const img = slide.querySelector('img');
+            if (!img) return;
+            img.addEventListener('click', () => {
+                if (typeof openImageLightbox === 'function') {
+                    openImageLightbox(img.src);
+                }
+            });
+        });
+
+        update();
     });
 }
