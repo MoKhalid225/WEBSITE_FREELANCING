@@ -2047,6 +2047,10 @@ body {
     gap: 60px;
 }
 
+.contact-wrapper.single-column {
+    grid-template-columns: 1fr;
+}
+
 .contact-info h2 {
     font-size: 36px;
     color: var(--primary-color);
@@ -2297,6 +2301,21 @@ body {
     .service-content.reverse,
     .project-content.reverse {
         direction: rtl;
+    }
+
+    /* Projects: show the governorate name/text first on mobile */
+    .project-content {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .project-text {
+        order: 1;
+    }
+
+    .project-image {
+        order: 2;
     }
 
     .contact-wrapper {
