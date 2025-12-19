@@ -144,37 +144,50 @@ if (applicationForm) {
 
 // Video Gallery Functionality
 function getVideoId(url) {
+    if (!url) return null;
+    
     // YouTube URL extraction
     if (url.includes('youtube.com/watch?v=')) {
-        return url.split('v=')[1].split('&')[0];
+        const match = url.match(/[?&]v=([^&]+)/);
+        return match ? match[1] : null;
     }
     // YouTube short URL extraction
     if (url.includes('youtu.be/')) {
-        return url.split('youtu.be/')[1].split('?')[0];
+        const match = url.match(/youtu\.be\/([^?]+)/);
+        return match ? match[1] : null;
     }
     // Google Drive file ID extraction
     if (url.includes('drive.google.com/file/d/')) {
-        return url.split('/d/')[1].split('/')[0];
+        const match = url.match(/\/d\/([^\/]+)/);
+        return match ? match[1] : null;
     }
     return null;
 }
 
 function convertToEmbedUrl(url) {
-    const videoId = getVideoId(url);
-    if (!videoId) return null;
+    if (!url) return null;
     
     // YouTube URL conversion
     if (url.includes('youtube.com') || url.includes('youtu.be')) {
-        return `https://www.youtube.com/embed/${videoId}`;
+        const videoId = getVideoId(url);
+        if (videoId) {
+            return `https://www.youtube.com/embed/${videoId}`;
+        }
     }
+    
     // Google Drive URL conversion
     if (url.includes('drive.google.com')) {
-        return `https://drive.google.com/file/d/${videoId}/preview`;
+        const fileId = getVideoId(url);
+        if (fileId) {
+            return `https://drive.google.com/file/d/${fileId}/preview`;
+        }
     }
+    
     // If already an embed URL, return as is
     if (url.includes('youtube.com/embed/') || (url.includes('drive.google.com/file/d/') && url.includes('/preview'))) {
         return url;
     }
+    
     return null;
 }
 
@@ -182,52 +195,65 @@ function convertToEmbedUrl(url) {
 const videoModal = document.getElementById('videoModal');
 const videoFrame = document.getElementById('videoFrame');
 const videoModalClose = document.querySelector('.video-modal-close');
-const videoWrappers = document.querySelectorAll('.video-wrapper');
 
-if (videoWrappers.length > 0) {
-    videoWrappers.forEach(wrapper => {
-        wrapper.addEventListener('click', () => {
-            const videoUrl = wrapper.getAttribute('data-video-url');
-            const videoType = wrapper.getAttribute('data-video-type');
+// Use event delegation for better performance and to handle dynamically added videos
+function initVideoGallery() {
+    const videoGrid = document.querySelector('.video-grid');
+    if (!videoGrid) return;
+    
+    videoGrid.addEventListener('click', (e) => {
+        // Find the closest video-wrapper
+        const wrapper = e.target.closest('.video-wrapper');
+        if (!wrapper) return;
+        
+        const videoUrl = wrapper.getAttribute('data-video-url');
+        const videoType = wrapper.getAttribute('data-video-type');
+        
+        if (!videoUrl) return;
+        
+        let embedUrl = null;
+        
+        // Handle local videos
+        if (videoType === 'local') {
+            // For local videos, create a video player
+            const modalContainer = document.querySelector('.video-modal-iframe-container');
+            modalContainer.innerHTML = `
+                <video id="localVideoPlayer" controls autoplay style="width:100%; height:100%; border-radius:10px; background:#000;">
+                    <source src="${videoUrl}" type="video/mp4">
+                    متصفحك لا يدعم تشغيل الفيديو.
+                </video>
+            `;
+            videoModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
             
-            if (videoUrl) {
-                let embedUrl = null;
-                
-                // Handle local videos
-                if (videoType === 'local') {
-                    // For local videos, create a video player
-                    const modalContainer = document.querySelector('.video-modal-iframe-container');
-                    modalContainer.innerHTML = `
-                        <video id="localVideoPlayer" controls autoplay style="width:100%; height:100%; border-radius:10px; background:#000;">
-                            <source src="${videoUrl}" type="video/mp4">
-                            متصفحك لا يدعم تشغيل الفيديو.
-                        </video>
-                    `;
-                    videoModal.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                    
-                    // Ensure video plays
-                    setTimeout(() => {
-                        const videoPlayer = document.getElementById('localVideoPlayer');
-                        if (videoPlayer) {
-                            videoPlayer.play().catch(e => console.log('Autoplay prevented:', e));
-                        }
-                    }, 100);
-                } else {
-                    // Handle YouTube and Google Drive
-                    embedUrl = convertToEmbedUrl(videoUrl);
-                    if (embedUrl) {
-                        const modalContainer = document.querySelector('.video-modal-iframe-container');
-                        modalContainer.innerHTML = `<iframe id="videoFrame" src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-                        videoModal.classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                    } else {
-                        alert('رابط الفيديو غير صحيح. يرجى استخدام رابط YouTube أو Google Drive.');
-                    }
+            // Ensure video plays
+            setTimeout(() => {
+                const videoPlayer = document.getElementById('localVideoPlayer');
+                if (videoPlayer) {
+                    videoPlayer.play().catch(e => console.log('Autoplay prevented:', e));
                 }
+            }, 100);
+        } else {
+            // Handle YouTube and Google Drive
+            embedUrl = convertToEmbedUrl(videoUrl);
+            if (embedUrl) {
+                const modalContainer = document.querySelector('.video-modal-iframe-container');
+                modalContainer.innerHTML = `<iframe id="videoFrame" src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                videoModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else {
+                console.error('Invalid video URL:', videoUrl);
+                alert('رابط الفيديو غير صحيح. يرجى استخدام رابط YouTube أو Google Drive.');
             }
-        });
+        }
     });
+}
+
+// Initialize video gallery
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVideoGallery);
+} else {
+    initVideoGallery();
 }
 
 // Function to close modal and stop all videos
@@ -328,67 +354,20 @@ function updateNewsCards(newsArray) {
     `).join('');
 }
 
-// Photo Gallery - Automatically load images from images/gallery folder
-// Supports both .jpg and .jpeg files
-// Just drop images named: gallery1.jpg, gallery2.jpeg, gallery3.jpg, etc.
-function loadGalleryImages() {
+// Photo Gallery - Initialize click handlers for static images
+// Images are now loaded statically in HTML for better performance
+function initGalleryImages() {
     const galleryGrid = document.getElementById('galleryGrid');
     if (!galleryGrid) return;
     
-    let imageIndex = 1;
-    let loadedCount = 0;
-    const maxAttempts = 100; // Maximum number of images to try
-    
-    function tryLoadImage(index, extension) {
-        if (index > maxAttempts) return;
-        
-        // Try .jpg first, then .jpeg if extension not specified
-        const ext = extension || 'jpg';
-        const imagePath = `images/gallery/gallery${index}.${ext}`;
-        const img = new Image();
-        
-        img.onload = function() {
-            // Image exists, add it to gallery
-            const galleryItem = document.createElement('div');
-            galleryItem.className = 'gallery-item';
-            const imgElement = document.createElement('img');
-            imgElement.src = imagePath;
-            imgElement.alt = `صورة المعرض ${index}`;
-            imgElement.loading = 'lazy';
-            imgElement.style.cursor = 'pointer';
-            
-            // Add click handler to open lightbox
-            imgElement.addEventListener('click', () => {
-                openImageLightbox(imagePath);
-            });
-            
-            galleryItem.appendChild(imgElement);
-            galleryGrid.appendChild(galleryItem);
-            loadedCount++;
-            
-            // Try next image
-            tryLoadImage(index + 1);
-        };
-        
-        img.onerror = function() {
-            // If .jpg failed, try .jpeg
-            if (ext === 'jpg') {
-                tryLoadImage(index, 'jpeg');
-            } else {
-                // Both extensions failed, move to next image number
-                // If we loaded at least one image, we're done
-                // Otherwise, try next (in case first image is missing but others exist)
-                if (loadedCount === 0 && index < 10) {
-                    tryLoadImage(index + 1);
-                }
-            }
-        };
-        
-        img.src = imagePath;
-    }
-    
-    // Start loading from gallery1.jpg
-    tryLoadImage(1);
+    // Get all gallery images and add click handlers
+    const galleryImages = galleryGrid.querySelectorAll('.gallery-item img');
+    galleryImages.forEach(img => {
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', () => {
+            openImageLightbox(img.src);
+        });
+    });
 }
 
 // Image Lightbox Functions
@@ -414,12 +393,12 @@ function closeImageLightbox() {
 // Initialize gallery when page loads
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
-        loadGalleryImages();
+        initGalleryImages();
         initImageLightbox();
         initAlbums();
     });
 } else {
-    loadGalleryImages();
+    initGalleryImages();
     initImageLightbox();
     initAlbums();
 }
