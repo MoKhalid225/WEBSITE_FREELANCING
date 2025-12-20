@@ -198,10 +198,8 @@ const videoModalClose = document.querySelector('.video-modal-close');
 
 // Use event delegation for better performance and to handle dynamically added videos
 function initVideoGallery() {
-    const videoGrid = document.querySelector('.video-grid');
-    if (!videoGrid) return;
-    
-    videoGrid.addEventListener('click', (e) => {
+    // Use document-level event delegation to handle all videos
+    document.addEventListener('click', (e) => {
         // Find the closest video-wrapper
         const wrapper = e.target.closest('.video-wrapper');
         if (!wrapper) return;
@@ -209,7 +207,7 @@ function initVideoGallery() {
         const videoUrl = wrapper.getAttribute('data-video-url');
         const videoType = wrapper.getAttribute('data-video-type');
         
-        if (!videoUrl) return;
+        if (!videoUrl || !videoModal) return;
         
         let embedUrl = null;
         
@@ -217,6 +215,8 @@ function initVideoGallery() {
         if (videoType === 'local') {
             // For local videos, create a video player
             const modalContainer = document.querySelector('.video-modal-iframe-container');
+            if (!modalContainer) return;
+            
             modalContainer.innerHTML = `
                 <video id="localVideoPlayer" controls autoplay style="width:100%; height:100%; border-radius:10px; background:#000;">
                     <source src="${videoUrl}" type="video/mp4">
@@ -238,6 +238,8 @@ function initVideoGallery() {
             embedUrl = convertToEmbedUrl(videoUrl);
             if (embedUrl) {
                 const modalContainer = document.querySelector('.video-modal-iframe-container');
+                if (!modalContainer) return;
+                
                 modalContainer.innerHTML = `<iframe id="videoFrame" src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                 videoModal.classList.add('active');
                 document.body.style.overflow = 'hidden';
